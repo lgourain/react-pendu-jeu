@@ -56,7 +56,8 @@ class App extends Component {
     console.log(this.state.score)
     switch(this.state.score) {
       case 0:
-        return
+        ctx.clearRect(0, 0, canvas.width, canvas.height)
+        break
       case 1:
         // ligne horizontale du bas
         ctx.moveTo(50, 400)
