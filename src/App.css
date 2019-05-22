@@ -19,3 +19,7 @@
     grid-template-rows: repeat(2, var(--cellWidth));
     grid-gap: 2px;
 }
+
+button.used {
+    color: gray;
+}

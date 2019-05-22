@@ -64,7 +64,13 @@ class App extends Component {
           {
             alphabet.map((lettre, index) => {
               return (
-                <button key={index} onClick={() => this.handleClick(lettre)}>{lettre}</button>
+                <button 
+                  key={index} 
+                  className={usedLetters.has(lettre) ? 'used' : 'not-used'}
+                  onClick={() => this.handleClick(lettre)}
+                >
+                  {lettre}
+                </button>
               )
             })
           }
