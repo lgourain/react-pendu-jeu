@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import './App.css';
 
+const HIDDEN_CHARACTER = "_"
 const alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("")
 const mots = [
   "ANGLE",
@@ -36,16 +37,15 @@ const mots = [
   "PLAFOND",
   "PORTE",
 ]
+const   initialState = {
+  usedLetters: new Set(),
+  phrase: mots[ Math.floor(Math.random() * Math.floor(mots.length)) ],
+  score: 0,
+}
 
 class App extends Component {
 
-  initialState = {
-    usedLetters: new Set(),
-    phrase: mots[ Math.floor(Math.random() * Math.floor(mots.length)) ],
-    score: 0,
-  }
-
-  state = { ...this.initialState }
+  state = initialState
 
   handleClick(lettre) {
     this.setState({
@@ -53,8 +53,17 @@ class App extends Component {
     })
   }
 
+  reset = () => {
+    this.setState({
+      usedLetters: new Set(),
+      phrase: mots[ Math.floor(Math.random() * Math.floor(mots.length)) ],
+      score: 0,
+    })
+  }
+
   render() {
     const { usedLetters, phrase } = this.state
+    const won = !computeDisplay(phrase, usedLetters).includes(HIDDEN_CHARACTER)
     return (
       <div className="container">
         <div className="masque">
@@ -75,6 +84,13 @@ class App extends Component {
             })
           }
         </div>
+        { won && 
+          <div className="gagne">
+            <p>Félicitations ! 🎉</p>
+            <p>Vous avez gagné la partie. Cliquez sur le bouton pour rejouer</p>
+            <button onClick={this.reset}>Rejouer</button>
+          </div>
+        }
       </div>
     );
   }  
@@ -84,7 +100,7 @@ class App extends Component {
 // chaque lettre non découverte étant représentée par un _underscore_.
 function computeDisplay(phrase, usedLetters) {
   return phrase.replace(/\w/g,
-    (letter) => (usedLetters.has(letter) ? letter : '_')
+    (letter) => (usedLetters.has(letter) ? letter : HIDDEN_CHARACTER)
   )
 }
 
