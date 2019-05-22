@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import './App.css';
 
 const HIDDEN_CHARACTER = "_"
+const NB_TENTATIVES = 11
 const alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("")
 const mots = [
   "ANGLE",
@@ -46,57 +47,84 @@ const   initialState = {
 class App extends Component {
 
   state = initialState
+  canvas = this.refs.canvas
 
-  componentDidMount() {
+  componentDidUpdate() {
     const canvas = this.refs.canvas
     const ctx = canvas.getContext("2d")
-    ctx.beginPath();
-    // ligne verticale à gauche
-    ctx.moveTo(150, 400);
-    ctx.lineTo(150, 100);
-    // ligne verticale à droite
-    ctx.moveTo(400, 100);
-    ctx.lineTo(400, 150);
-    // ligne horizontale du bas
-    ctx.moveTo(50, 400);
-    ctx.lineTo(250, 400);
-    // ligne horizontale du haut
-    ctx.moveTo(150, 100);
-    ctx.lineTo(400, 100);
-    // ligne biais
-    ctx.moveTo(150, 150);
-    ctx.lineTo(200, 100);
-    // tête bonhomme
-    ctx.moveTo(425, 175);
-    ctx.arc(400, 175, 25, 0, 2 * Math.PI);
-    // corps bonhomme
-    ctx.moveTo(400, 200);
-    ctx.lineTo(400, 300);
-    // bras droit bonhomme
-    ctx.moveTo(400, 250);
-    ctx.lineTo(450, 225);
-    // bras gauche bonhomme
-    ctx.moveTo(400, 250);
-    ctx.lineTo(350, 225);
-    // jambe droite bonhomme
-    ctx.moveTo(400, 300);
-    ctx.lineTo(455, 375);
-    // jambe gauche bonhomme
-    ctx.moveTo(400, 300);
-    ctx.lineTo(350, 375);
+    ctx.beginPath()
+    console.log(this.state.score)
+    switch(this.state.score) {
+      case 0:
+        return
+      case 1:
+        // ligne horizontale du bas
+        ctx.moveTo(50, 400)
+        ctx.lineTo(250, 400)
+        break
+      case 2:
+        // ligne verticale à gauche
+        ctx.moveTo(150, 400)
+        ctx.lineTo(150, 100)
+        break
+      case 3:
+        // ligne horizontale du haut
+        ctx.moveTo(150, 100)
+        ctx.lineTo(400, 100)
+        break
+      case 4:
+        // ligne verticale à droite
+        ctx.moveTo(400, 100)
+        ctx.lineTo(400, 150)
+        break
+      case 5:
+        // ligne biais
+        ctx.moveTo(150, 150)
+        ctx.lineTo(200, 100)
+        break
+      case 6:
+        // tête bonhomme
+        ctx.moveTo(425, 175)
+        ctx.arc(400, 175, 25, 0, 2 * Math.PI)
+        break
+      case 7:
+        // corps bonhomme
+        ctx.moveTo(400, 200)
+        ctx.lineTo(400, 300)
+        break
+      case 8:
+        // bras droit bonhomme
+        ctx.moveTo(400, 250)
+        ctx.lineTo(450, 225)
+        break
+      case 9:
+        // bras gauche bonhomme
+        ctx.moveTo(400, 250)
+        ctx.lineTo(350, 225)
+        break
+      case 10:
+        // jambe droite bonhomme
+        ctx.moveTo(400, 300)
+        ctx.lineTo(455, 375)
+        break
+      case 11:
+        // jambe gauche bonhomme
+        ctx.moveTo(400, 300)
+        ctx.lineTo(350, 375)
+        break
+      default:
+        return
+    }
     ctx.stroke();
   }
 
   handleClick(lettre) {
     const { usedLetters, phrase, score } = this.state
-    const newScore = usedLetters.has(lettre) ? 
-      score - 2 : 
-      (phrase.includes(lettre)) ? 
-        score + 1 : 
-        score - 1
-    
+    const newScore = phrase.includes(lettre) ? 
+        score : 
+        score + 1
     this.setState({
-      usedLetters: this.state.usedLetters.add(lettre),
+      usedLetters: usedLetters.add(lettre),
       score: newScore,
     })
   }
@@ -112,9 +140,9 @@ class App extends Component {
   render() {
     const { usedLetters, phrase, score } = this.state
     const won = !computeDisplay(phrase, usedLetters).includes(HIDDEN_CHARACTER)
+    const lost = score === NB_TENTATIVES
     return (
       <div className="container">
-        <p className="score">Score : {score}</p>
         <div className="pendu">
           <canvas ref="canvas" id="canvas" width={500} height={500}>
           </canvas>
@@ -128,6 +156,7 @@ class App extends Component {
               return (
                 <button 
                   key={index} 
+                  disabled={lost}
                   className={usedLetters.has(lettre) ? 'used' : 'not-used'}
                   onClick={() => this.handleClick(lettre)}
                 >
@@ -141,6 +170,13 @@ class App extends Component {
           <div className="gagne">
             <p>Félicitations ! 🎉</p>
             <p>Vous avez gagné la partie. Cliquez sur le bouton pour rejouer</p>
+            <button onClick={this.reset}>Rejouer</button>
+          </div>
+        }
+        { lost && 
+          <div className="perdu">
+            <p>💀</p>
+            <p>Vous n'avez pas trouvé le mot ! 😪 Mais vous pouvez rééssayer en cliquant sur le bouton.</p>
             <button onClick={this.reset}>Rejouer</button>
           </div>
         }

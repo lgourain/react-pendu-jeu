@@ -8,14 +8,7 @@
     align-items: center;
 }
 
-.score {
-    position: absolute;
-    right: 30px;
-}
-
 #canvas {
-    width: 500px;
-    height: 500px;
     border: 1px solid gray;
 }
 
@@ -35,6 +28,6 @@ button.used {
     color: gray;
 }
 
-.gagne {
+.gagne, .perdu {
     text-align: center;
 }
