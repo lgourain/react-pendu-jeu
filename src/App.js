@@ -157,7 +157,7 @@ class App extends Component {
               return (
                 <button 
                   key={index} 
-                  disabled={lost}
+                  disabled={won || lost}
                   className={usedLetters.has(lettre) ? 'used' : 'not-used'}
                   onClick={() => this.handleClick(lettre)}
                 >
