@@ -1,0 +1,19 @@
+:root {
+    --cellWidth: 40px;
+}
+
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.masque {
+}
+
+.boutons {
+    display: grid;
+    grid-template-columns: repeat(13, var(--cellWidth));
+    grid-template-rows: repeat(2, var(--cellWidth));
+    grid-gap: 2px;
+}
