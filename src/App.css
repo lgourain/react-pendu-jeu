@@ -8,6 +8,17 @@
     align-items: center;
 }
 
+.score {
+    position: absolute;
+    right: 30px;
+}
+
+#canvas {
+    width: 500px;
+    height: 500px;
+    border: 1px solid gray;
+}
+
 .masque {
     font-size: 1.5rem;
     letter-spacing: 10px;

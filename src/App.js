@@ -47,9 +47,57 @@ class App extends Component {
 
   state = initialState
 
+  componentDidMount() {
+    const canvas = this.refs.canvas
+    const ctx = canvas.getContext("2d")
+    ctx.beginPath();
+    // ligne verticale à gauche
+    ctx.moveTo(150, 400);
+    ctx.lineTo(150, 100);
+    // ligne verticale à droite
+    ctx.moveTo(400, 100);
+    ctx.lineTo(400, 150);
+    // ligne horizontale du bas
+    ctx.moveTo(50, 400);
+    ctx.lineTo(250, 400);
+    // ligne horizontale du haut
+    ctx.moveTo(150, 100);
+    ctx.lineTo(400, 100);
+    // ligne biais
+    ctx.moveTo(150, 150);
+    ctx.lineTo(200, 100);
+    // tête bonhomme
+    ctx.moveTo(425, 175);
+    ctx.arc(400, 175, 25, 0, 2 * Math.PI);
+    // corps bonhomme
+    ctx.moveTo(400, 200);
+    ctx.lineTo(400, 300);
+    // bras droit bonhomme
+    ctx.moveTo(400, 250);
+    ctx.lineTo(450, 225);
+    // bras gauche bonhomme
+    ctx.moveTo(400, 250);
+    ctx.lineTo(350, 225);
+    // jambe droite bonhomme
+    ctx.moveTo(400, 300);
+    ctx.lineTo(455, 375);
+    // jambe gauche bonhomme
+    ctx.moveTo(400, 300);
+    ctx.lineTo(350, 375);
+    ctx.stroke();
+  }
+
   handleClick(lettre) {
+    const { usedLetters, phrase, score } = this.state
+    const newScore = usedLetters.has(lettre) ? 
+      score - 2 : 
+      (phrase.includes(lettre)) ? 
+        score + 1 : 
+        score - 1
+    
     this.setState({
-      usedLetters: this.state.usedLetters.add(lettre)
+      usedLetters: this.state.usedLetters.add(lettre),
+      score: newScore,
     })
   }
 
@@ -62,10 +110,15 @@ class App extends Component {
   }
 
   render() {
-    const { usedLetters, phrase } = this.state
+    const { usedLetters, phrase, score } = this.state
     const won = !computeDisplay(phrase, usedLetters).includes(HIDDEN_CHARACTER)
     return (
       <div className="container">
+        <p className="score">Score : {score}</p>
+        <div className="pendu">
+          <canvas ref="canvas" id="canvas" width={500} height={500}>
+          </canvas>
+        </div>
         <div className="masque">
           <p>{computeDisplay(phrase, usedLetters)}</p>
         </div>
