@@ -8,6 +8,11 @@
     align-items: center;
 }
 
+.essais {
+    position: absolute;
+    right: 30px;
+}
+
 #canvas {
     border: 1px solid gray;
 }

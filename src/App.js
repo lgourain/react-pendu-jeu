@@ -41,7 +41,7 @@ const mots = [
 const   initialState = {
   usedLetters: new Set(),
   phrase: mots[ Math.floor(Math.random() * Math.floor(mots.length)) ],
-  score: 0,
+  essais: 0,
 }
 
 class App extends Component {
@@ -54,7 +54,7 @@ class App extends Component {
     const ctx = canvas.getContext("2d")
     ctx.beginPath()
     console.log(this.state.score)
-    switch(this.state.score) {
+    switch(this.state.essais) {
       case 0:
         ctx.clearRect(0, 0, canvas.width, canvas.height)
         break
@@ -120,13 +120,13 @@ class App extends Component {
   }
 
   handleClick(lettre) {
-    const { usedLetters, phrase, score } = this.state
-    const newScore = phrase.includes(lettre) ? 
-        score : 
-        score + 1
+    const { usedLetters, phrase, essais } = this.state
+    const newEssais = phrase.includes(lettre) ? 
+      essais : 
+      essais + 1
     this.setState({
       usedLetters: usedLetters.add(lettre),
-      score: newScore,
+      essais: newEssais,
     })
   }
 
@@ -134,16 +134,19 @@ class App extends Component {
     this.setState({
       usedLetters: new Set(),
       phrase: mots[ Math.floor(Math.random() * Math.floor(mots.length)) ],
-      score: 0,
+      essais: 0,
     })
   }
 
   render() {
-    const { usedLetters, phrase, score } = this.state
+    const { usedLetters, phrase, essais } = this.state
     const won = !computeDisplay(phrase, usedLetters).includes(HIDDEN_CHARACTER)
-    const lost = score === NB_TENTATIVES
+    const lost = essais === NB_TENTATIVES
     return (
       <div className="container">
+        <div className="essais">
+          <p>Tentatives restantes : {NB_TENTATIVES - essais}</p>
+        </div>
         <div className="pendu">
           <canvas ref="canvas" id="canvas" width={500} height={500}>
           </canvas>
@@ -177,7 +180,7 @@ class App extends Component {
         { lost && 
           <div className="perdu">
             <p>💀</p>
-            <p>Vous n'avez pas trouvé le mot ! 😪 Mais vous pouvez rééssayer en cliquant sur le bouton.</p>
+            <p>Vous n'avez pas trouvé le mot ! 😪 Mais vous pouvez rééssayer en cliquant sur le bouton rejouer.</p>
             <button onClick={this.reset}>Rejouer</button>
           </div>
         }
