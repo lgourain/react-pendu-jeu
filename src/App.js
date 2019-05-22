@@ -42,6 +42,7 @@ const   initialState = {
   usedLetters: new Set(),
   phrase: mots[ Math.floor(Math.random() * Math.floor(mots.length)) ],
   essais: 0,
+  score: 0,
 }
 
 class App extends Component {
@@ -53,7 +54,6 @@ class App extends Component {
     const canvas = this.refs.canvas
     const ctx = canvas.getContext("2d")
     ctx.beginPath()
-    console.log(this.state.score)
     switch(this.state.essais) {
       case 0:
         ctx.clearRect(0, 0, canvas.width, canvas.height)
@@ -120,13 +120,19 @@ class App extends Component {
   }
 
   handleClick(lettre) {
-    const { usedLetters, phrase, essais } = this.state
+    const { usedLetters, phrase, essais, score } = this.state
     const newEssais = phrase.includes(lettre) ? 
       essais : 
       essais + 1
+    const newScore = usedLetters.has(lettre) ?
+      score - 2 :
+      (phrase.includes(lettre)) ?
+        score + 1:
+        score -1
     this.setState({
       usedLetters: usedLetters.add(lettre),
       essais: newEssais,
+      score: newScore,
     })
   }
 
@@ -135,16 +141,18 @@ class App extends Component {
       usedLetters: new Set(),
       phrase: mots[ Math.floor(Math.random() * Math.floor(mots.length)) ],
       essais: 0,
+      score: 0,
     })
   }
 
   render() {
-    const { usedLetters, phrase, essais } = this.state
+    const { usedLetters, phrase, essais, score } = this.state
     const won = !computeDisplay(phrase, usedLetters).includes(HIDDEN_CHARACTER)
     const lost = essais === NB_TENTATIVES
     return (
       <div className="container">
-        <div className="essais">
+        <div className="score">
+          <p>Score : {score}</p>
           <p>Tentatives restantes : {NB_TENTATIVES - essais}</p>
         </div>
         <div className="pendu">

@@ -8,9 +8,10 @@
     align-items: center;
 }
 
-.essais {
+.score {
     position: absolute;
     right: 30px;
+    text-align: right;
 }
 
 #canvas {
