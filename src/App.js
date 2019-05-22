@@ -48,7 +48,9 @@ class App extends Component {
   state = { ...this.initialState }
 
   handleClick(lettre) {
-    console.log(lettre, 'clicked')
+    this.setState({
+      usedLetters: this.state.usedLetters.add(lettre)
+    })
   }
 
   render() {
